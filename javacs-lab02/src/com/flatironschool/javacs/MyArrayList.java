@@ -38,7 +38,7 @@ public class MyArrayList<E> implements List<E> {
 		mal.add(1);
 		mal.add(2);
 		mal.add(3);
-		System.out.println(Arrays.toString(mal.toArray()) + " size = " + mal.size);
+		System.out.println(Arrays.toString(mal.toArray()) + " siz = " + mal.size);
 		
 		mal.remove(new Integer(2));
 		System.out.println(Arrays.toString(mal.toArray()) + " size = " + mal.size);
@@ -63,6 +63,18 @@ public class MyArrayList<E> implements List<E> {
 			throw new IndexOutOfBoundsException();
 		}
 		// TODO: fill in the rest of this method
+		if (size >= array.length) {
+			E[] bigger = (E[]) new Object[array.length * 2]; //make bigger array
+			System.arraycopy(array, 0, bigger, 0, index-1); //copy elements up to index
+			array[index] = element; //insert element at index
+			System.arraycopy(array, index, bigger, index+1, array.length); //copy the rest of the elements to their index+1
+			array = bigger; //array now points to new bigger array
+		}
+		for (int i = array.length; i >= index ; i--) {
+			array[i+1] = array[i] //shift elements behind index by 1
+		}
+		array[size] = element;//insert element
+		size++;
 	}
 
 	@Override
