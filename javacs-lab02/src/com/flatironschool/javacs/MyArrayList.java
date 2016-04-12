@@ -38,7 +38,7 @@ public class MyArrayList<E> implements List<E> {
 		mal.add(1);
 		mal.add(2);
 		mal.add(3);
-		System.out.println(Arrays.toString(mal.toArray()) + " siz = " + mal.size);
+		System.out.println(Arrays.toString(mal.toArray()) + " size = " + mal.size);
 		
 		mal.remove(new Integer(2));
 		System.out.println(Arrays.toString(mal.toArray()) + " size = " + mal.size);
@@ -62,18 +62,20 @@ public class MyArrayList<E> implements List<E> {
 		if (index < 0 || index > size) {
 			throw new IndexOutOfBoundsException();
 		}
-		// TODO: fill in the rest of this method
 		if (size >= array.length) {
 			E[] bigger = (E[]) new Object[array.length * 2]; //make bigger array
 			System.arraycopy(array, 0, bigger, 0, index-1); //copy elements up to index
-			array[index] = element; //insert element at index
+			bigger[index] = element; //insert element at index
 			System.arraycopy(array, index, bigger, index+1, array.length); //copy the rest of the elements to their index+1
 			array = bigger; //array now points to new bigger array
 		}
-		for (int i = array.length; i >= index ; i--) {
-			array[i+1] = array[i] //shift elements behind index by 1
+		else {
+			for (int i = size-1; i >= index ; i--) {
+				array[i+1] = array[i]; //shift elements behind index by 1
+			}
+			array[index] = element;//insert element
 		}
-		array[size] = element;//insert element
+		//alternate solution: use add(E element) to get the resizing;
 		size++;
 	}
 
@@ -123,8 +125,21 @@ public class MyArrayList<E> implements List<E> {
 
 	@Override
 	public int indexOf(Object target) {
-		// TODO: fill in this method
-		return 0;
+		if (target == null) { 
+			for (int i = 0; i < size; i++) {
+				if (array[i] == null) {
+					return i;
+				}
+			}
+		}
+		else { //if target isn't null
+			for (int i = 0; i < size; i++) {
+				if (array[i].equals(target)) {
+					return i;
+				}
+			}
+		}
+		return -1; //not found
 	}
 
 	/** Checks whether an element of the array is the target.
@@ -194,8 +209,12 @@ public class MyArrayList<E> implements List<E> {
 
 	@Override
 	public E remove(int index) {
-		// TODO: fill in this method.
-		return null;
+		E removed = get(index);
+		for (int i = index; i < size-1; i++) {
+			array[i] = array[i+1];
+		}
+		size--;
+		return removed;
 	}
 
 	@Override
@@ -214,8 +233,9 @@ public class MyArrayList<E> implements List<E> {
 
 	@Override
 	public E set(int index, E element) {
-		// TODO: fill in this method.
-		return null;
+		E prevElement = get(index);
+		array[index] = element;
+		return prevElement;
 	}
 
 	@Override
